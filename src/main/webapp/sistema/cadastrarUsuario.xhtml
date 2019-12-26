@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+
+<ui:composition template="/template/layoutBase.xhtml">
+
+
+	<ui:define name="content">
+
+		<h:form id="form-cadastro">
+
+			<h:panelGrid id="panelGrid-campos-form" columns="2" cellpadding="10">
+
+				<p:outputLabel value="Nome" for="inputText-nome" />
+				<p:inputText id="inputText-nome" style="width:300px" maxlength="70"
+					value="#{cadastrarUsuarioController.usuarioModel.nome}"
+					required="true"
+					requiredMessage="O nome é de preenchimento obrigatório" />
+
+				<p:outputLabel value="E-mail" for="inputText-email" />
+				<p:inputText id="inputText-email" style="width:300px" maxlength="50"
+					value="#{cadastrarUsuarioController.usuarioModel.email}"
+					required="true"
+					requiredMessage="O email é de preenchimento obrigatório" />
+
+
+				<p:outputLabel value="Senha" for="inputText-senha" />
+				<p:inputText id="inputText-senha" style="width:300px" maxlength="15"
+					value="#{cadastrarUsuarioController.usuarioModel.senha}"
+					required="true"
+					requiredMessage="A senha é de preenchimento obrigatório" />
+
+				<p:spacer />
+
+				<p:commandButton value="Salvar" id="commandButton-salvar"
+					icon="ui-icon-gear"
+					actionListener="#{cadastrarUsuarioController.SalvarNovoUsuario}"
+					update="panelGrid-campos-form" />
+
+			</h:panelGrid>
+
+			<p:messages showDetail="true" autoUpdate="true" closable="true"
+				severity="warn" />
+			<p:messages autoUpdate="true" closable="true" severity="error" />
+			<p:messages showDetail="true" autoUpdate="true" closable="true"
+				severity="info" />
+
+		</h:form>
+
+		<h:form id="form">
+			<p:growl id="msgs" />
+
+			<p:panel header="Adicionar Telefones" style="margin-bottom:20px">
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputLabel value="DDD: *" for="txt_ddd"></h:outputLabel>
+					<p:inputText id="txt_ddd"
+						value="#{cadastrarUsuarioController.telefoneModel.ddd}"						
+						required="true"
+						requiredMessage="O ddd é de preenchimento obrigatório" />
+
+					<h:outputLabel value="Número: *" for="txt_numero"></h:outputLabel>
+					<p:inputText id="txt_numero"
+						value="#{cadastrarUsuarioController.telefoneModel.numero}"
+						required="true"
+						requiredMessage="O numero é de preenchimento obrigatório" />
+
+					<p:commandButton id="btn_reset" value="Reset" type="reset" />
+					<p:commandButton id="btn_add" value="Add"
+						update="fones msgs @parent"
+						action="#{cadastrarUsuarioController.reinit}">
+						<p:collector value="#{cadastrarUsuarioController.telefoneModel}"
+							addTo="#{cadastrarUsuarioController.fones}" unique="true" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+
+			<p:outputPanel id="fones">
+				<p:dataTable value="#{cadastrarUsuarioController.fones}" var="fone"
+					id="fonesTable">
+
+					<p:column headerText="DDD">
+						<h:outputText value="#{fone.ddd}" />
+					</p:column>
+
+					<p:column headerText="Número">
+						<f:facet name="header">
+							<h:outputText value="Numero" />
+						</f:facet>
+						<h:outputText value="#{fone.numero}" />
+					</p:column>
+
+					<p:column headerText="Action">
+						<p:commandLink value="Remove" update=":form:fones"
+							process=":form:fones">
+							<p:collector value="#{fone}"
+								removeFrom="#{cadastrarUsuarioController.fones}" unique="true" />
+						</p:commandLink>
+					</p:column>
+
+				</p:dataTable>
+			</p:outputPanel>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+
+
+</html>
